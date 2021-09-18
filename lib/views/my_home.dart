@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:htn/constants.dart';
 import 'package:htn/views/goose_view.dart';
 import 'package:location/location.dart';
+import 'package:image_picker/image_picker.dart';
 
 class MyHome extends StatefulWidget {
   State<MyHome> createState() => _MyHomeState();
@@ -13,6 +15,7 @@ class _MyHomeState extends State<MyHome> {
   Location location = Location();
   late GoogleMapController mapController;
   LatLng _center = LatLng(45.521563, -122.677433);
+  File? image;
 
   _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
@@ -48,6 +51,21 @@ class _MyHomeState extends State<MyHome> {
             curLocation.longitude!.toDouble()))));
   }
 
+  pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return false;
+
+      final imageTemporary = File(image.path);
+      this.image = imageTemporary;
+      return true;
+    } on PlatformException catch (e) {
+      // ignore: avoid_print
+      print("Failed to pick image $e");
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
@@ -72,8 +90,13 @@ class _MyHomeState extends State<MyHome> {
               bottom: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => GooseView()));
+                  pickImage(ImageSource.camera).then((success) {
+                    if (!success) return;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => GooseView(image: image)));
+                  });
                 },
                 style: ElevatedButton.styleFrom(
                   side: BorderSide(width: 4, color: Constants.PrimaryYellow),
