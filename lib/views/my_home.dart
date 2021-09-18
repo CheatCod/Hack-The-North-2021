@@ -11,7 +11,7 @@ class MyHome extends StatefulWidget {
   State<MyHome> createState() => _MyHomeState();
 }
 
-class _MyHomeState extends State<MyHome> {
+class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
   Location location = Location();
   late GoogleMapController mapController;
   LatLng _center = LatLng(45.521563, -122.677433);

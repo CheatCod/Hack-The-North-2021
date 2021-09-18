@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class GooseView extends StatelessWidget {
   File? image;
 
-  GooseView({required this.image});
+  GooseView({Key? key, required this.image}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -14,13 +14,18 @@ class GooseView extends StatelessWidget {
       children: [
         Image.file(image!),
         Positioned(
+            bottom: 0,
+            right: 0,
             child: Column(
-          children: [
-            Container(
-              color: Colors.red,
-            )
-          ],
-        ))
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Column(),
+                ),
+              ],
+            ))
       ],
     );
   }
