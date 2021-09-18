@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:htn/views/goose_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:htn/constants.dart';
 
@@ -17,14 +18,34 @@ class _CameraViewState extends State<CameraView> {
   CameraController? controller;
   XFile? image;
 
-  pickImage(ImageSource source) async {
+  onImageTaken(XFile? image) {
     try {
-      final image = await ImagePicker().pickImage(source: source);
       if (image == null) return false;
       this.image = image;
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => GooseView(image: image)));
       return true;
     } catch (e) {
-      return false;
+      print(e);
+    }
+    return false;
+  }
+
+  pickImage() async {
+    try {
+      ImagePicker()
+          .pickImage(source: ImageSource.gallery)
+          .then((image) => onImageTaken(image));
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  takeImage() async {
+    try {
+      controller!.takePicture().then((image) => onImageTaken(image));
+    } catch (e) {
+      print(e);
     }
   }
 
@@ -72,6 +93,7 @@ class _CameraViewState extends State<CameraView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+                //Back Button
                 Expanded(
                   flex: 1,
                   child: ElevatedButton(
@@ -88,10 +110,12 @@ class _CameraViewState extends State<CameraView> {
                     child: Icon(Icons.arrow_back_rounded, color: Colors.black),
                   ),
                 ),
+                //Take Picture Button
                 Expanded(
                   flex: 2,
+                  //Button to take a picture with the camera
                   child: ElevatedButton(
-                    onPressed: () {},
+                    onPressed: takeImage,
                     style: ElevatedButton.styleFrom(
                       side:
                           BorderSide(width: 4, color: Constants.PrimaryYellow),
@@ -109,12 +133,11 @@ class _CameraViewState extends State<CameraView> {
                     ),
                   ),
                 ),
+                //Gallery Button
                 Expanded(
                   flex: 1,
                   child: ElevatedButton(
-                    onPressed: () async {
-                      pickImage(ImageSource.gallery);
-                    },
+                    onPressed: pickImage,
                     style: ElevatedButton.styleFrom(
                       shape: CircleBorder(),
                       padding: EdgeInsets.all(20),
