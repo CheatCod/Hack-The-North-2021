@@ -3,7 +3,6 @@ const app = express();
 const port = 3000;
 const tf = require("@tensorflow/tfjs-node");
 const modelJson = require("./static/model/model.json");
-const $ = require("jquery");
 let model;
 
 app.get("/", (req, res) => {
@@ -14,17 +13,16 @@ const loadModel = async () => {
   console.log("loading model", modelJson);
   model = await tf.loadGraphModel('http://127.0.0.1:8080/static/model/model.json');
   let is_new_od_model = model.inputs.length == 3;
-  var picture = new Image();
-  picture.src = 'http://127.0.0.1:8080/static/model/geese.jpeg';
-  let image = await loadImage(picture);
+  let image = await loadImage('http://127.0.0.1:8080/static/model/geese.jpeg');
   console.log("model loaded");
   //   return result;
 };
 
 const loadImage = async (picture) => {
-  console.log(picture);
+  const height = picture.naturalHeight;
+  const width = picture.naturalWidth;
   const input_size = model.inputs[0].shape[1];
-  let image = tf.browser.fromPixels(picture, 3);
+  let image = tf.browser.fromPixels([height, width], 3);
   image = tf.image.resizeBilinear(image.expandDims().toFloat(), [input_size, input_size]);
   if (is_new_od_model) {
     console.log("ODM V2 Detected");
