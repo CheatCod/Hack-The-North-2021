@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
-import 'package:htn/Constants.dart';
+import 'package:htn/constants.dart';
 import 'package:location/location.dart';
 
 void main() => runApp(const MyApp());
@@ -87,7 +87,7 @@ class _MyAppState extends State<MyApp> {
                     height: 40,
                     width: 40,
                     decoration: const ShapeDecoration(
-                      color: Colors.blue,
+                      color: Constants.Blue,
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.all(Radius.circular(5))),
                     ),
@@ -121,7 +121,6 @@ class _MyAppState extends State<MyApp> {
   }
 
   goCurPosition() async {
-    print("updagin");
     LocationData curLocation = await location.getLocation();
     mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
         zoom: 11.0,
