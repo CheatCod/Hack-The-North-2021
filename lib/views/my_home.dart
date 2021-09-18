@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter/services.dart';
 import 'package:htn/constants.dart';
+import 'package:htn/views/camera_view.dart';
 import 'package:htn/views/goose_view.dart';
 import 'package:location/location.dart';
 import 'package:image_picker/image_picker.dart';
@@ -90,13 +91,16 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
               bottom: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  pickImage(ImageSource.camera).then((success) {
-                    if (!success) return;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GooseView(image: image)));
-                  });
+                  // pickImage(ImageSource.camera).then((success) {
+                  //   if (!success) return;
+                  //   Navigator.push(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) => GooseView(image: image)));
+                  // });
+
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => CameraView()));
                 },
                 style: ElevatedButton.styleFrom(
                   side: BorderSide(width: 4, color: Constants.PrimaryYellow),
