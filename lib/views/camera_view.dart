@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../main.dart' as main;
 
@@ -13,6 +14,18 @@ class CameraView extends StatefulWidget {
 
 class _CameraViewState extends State<CameraView> {
   CameraController? controller;
+  XFile? image;
+
+  pickImage(ImageSource source) async {
+    try {
+      final image = await ImagePicker().pickImage(source: source);
+      if (image == null) return false;
+      this.image = image;
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 
   @override
   void initState() {
@@ -38,6 +51,21 @@ class _CameraViewState extends State<CameraView> {
     if (!controller!.value.isInitialized) {
       return Container();
     }
-    return MaterialApp(home: CameraPreview(controller!));
+    return MaterialApp(
+      home: Scaffold(
+        body: AspectRatio(
+          aspectRatio: controller!.value.aspectRatio > 1
+              ? 1 / controller!.value.aspectRatio
+              : controller!.value.aspectRatio,
+          child: CameraPreview(controller!),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () async {
+            pickImage(ImageSource.gallery);
+          },
+          child: Icon(Icons.photo_library),
+        ),
+      ),
+    );
   }
 }

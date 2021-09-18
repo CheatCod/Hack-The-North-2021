@@ -16,7 +16,6 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
   Location location = Location();
   late GoogleMapController mapController;
   LatLng _center = LatLng(45.521563, -122.677433);
-  File? image;
 
   _onMapCreated(GoogleMapController controller) async {
     mapController = controller;
@@ -50,21 +49,6 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
         zoom: 11.0,
         target: LatLng(curLocation.latitude!.toDouble(),
             curLocation.longitude!.toDouble()))));
-  }
-
-  pickImage(ImageSource source) async {
-    try {
-      final image = await ImagePicker().pickImage(source: source);
-      if (image == null) return false;
-
-      final imageTemporary = File(image.path);
-      this.image = imageTemporary;
-      return true;
-    } on PlatformException catch (e) {
-      // ignore: avoid_print
-      print("Failed to pick image $e");
-    }
-    return false;
   }
 
   @override
