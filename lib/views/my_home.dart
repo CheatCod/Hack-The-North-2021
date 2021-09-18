@@ -70,6 +70,7 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
                 zoom: 11.0,
               ),
               myLocationEnabled: true,
+              myLocationButtonEnabled: false,
               zoomGesturesEnabled: false, // ! get min max zoom
             ),
             Positioned(
