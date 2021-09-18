@@ -76,14 +76,6 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
               bottom: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  // pickImage(ImageSource.camera).then((success) {
-                  //   if (!success) return;
-                  //   Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => GooseView(image: image)));
-                  // });
-
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => CameraView()));
                 },

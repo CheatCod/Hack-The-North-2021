@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:htn/views/goose_view.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:htn/constants.dart';
 
@@ -21,6 +22,8 @@ class _CameraViewState extends State<CameraView> {
     try {
       if (image == null) return false;
       this.image = image;
+      Navigator.push(context,
+          MaterialPageRoute(builder: (context) => GooseView(image: image)));
       return true;
     } catch (e) {
       print(e);
