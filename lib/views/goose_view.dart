@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class GooseView extends StatelessWidget {
-  File? image;
+  Image? image;
 
   GooseView({Key? key, required this.image}) : super(key: key);
 
@@ -12,20 +12,21 @@ class GooseView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Image.file(image!),
+        Image(image: image!.image),
         Positioned(
-            bottom: 0,
-            right: 0,
-            child: Column(
-              children: [
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                  child: Column(),
-                ),
-              ],
-            ))
+          bottom: 0,
+          right: 0,
+          child: Column(
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+                child: Column(),
+              ),
+            ],
+          ),
+        )
       ],
     );
   }
