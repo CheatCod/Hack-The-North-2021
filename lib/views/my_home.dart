@@ -25,7 +25,7 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
         bearing: 0,
         target: LatLng(curLocation.latitude!.toDouble(),
             curLocation.longitude!.toDouble()),
-        zoom: 17.0,
+        zoom: 11.0,
       ),
     ));
   }
@@ -46,7 +46,7 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
   goCurPosition() async {
     LocationData curLocation = await location.getLocation();
     mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-        zoom: 11.0,
+        zoom: 18.0,
         target: LatLng(curLocation.latitude!.toDouble(),
             curLocation.longitude!.toDouble()))));
   }
@@ -70,7 +70,6 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-
     return SafeArea(
       top: false,
       child: Scaffold(
@@ -85,18 +84,18 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
                 target: _center,
                 zoom: 11.0,
               ),
+              myLocationEnabled: true,
+              zoomGesturesEnabled: false, // ! get min max zoom
             ),
             Positioned(
               bottom: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  pickImage(ImageSource.camera).then((success) {
-                    if (!success) return;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GooseView(image: image)));
-                  });
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GooseView(
+                              image: Image.asset('Assets/testimg.jpg'))));
                 },
                 style: ElevatedButton.styleFrom(
                   side: BorderSide(width: 4, color: Constants.PrimaryYellow),
@@ -136,6 +135,27 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SecondRoute extends StatelessWidget {
+  const SecondRoute({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Second Route"),
+      ),
+      body: Center(
+        child: ElevatedButton(
+          onPressed: () {
+            // Navigate back to first route when tapped.
+          },
+          child: Text('Go back!'),
         ),
       ),
     );
