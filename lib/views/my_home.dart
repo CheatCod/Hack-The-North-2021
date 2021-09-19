@@ -16,7 +16,7 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
   Location location = Location();
   late GoogleMapController mapController;
   // LatLng _center = LatLng(45.521563, -122.677433);
-  
+
   LatLng _center = LatLng(43.468917, -80.538172);
 
   _onMapCreated(GoogleMapController controller) async {
@@ -30,6 +30,15 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
         zoom: 11.0,
       ),
     ));
+
+    setState(() {
+      _markers.add(Marker(
+          markerId: MarkerId('goose1'),
+          position: LatLng(43.469117, -80.538172),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+    });
   }
 
   requestPermission() async {
@@ -53,24 +62,23 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
             curLocation.longitude!.toDouble()))));
   }
 
-  late BitmapDescriptor myPinIcon; 
+  late BitmapDescriptor myPinIcon;
 
   @override
-   void initState() {
-      super.initState();
-      setCustomMapPin();
-   }   
-   void setCustomMapPin() async {
-      myPinIcon = await BitmapDescriptor.fromAssetImage(
-      ImageConfiguration(devicePixelRatio: 2.5),
-      'Assets/goose4.png');
-   }
-   
+  void initState() {
+    super.initState();
+    setCustomMapPin();
+  }
+
+  void setCustomMapPin() async {
+    myPinIcon = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(devicePixelRatio: 2.5), 'Assets/goose4.png');
+  }
+
   Set<Marker> _markers = {};
 
   @override
   Widget build(BuildContext context) {
- 
     SystemChrome.setSystemUIOverlayStyle(
         SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return SafeArea(
@@ -81,32 +89,17 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
           alignment: Alignment.bottomCenter,
           children: [
             GoogleMap(
-              markers: _markers,
-              zoomControlsEnabled: false,
-              onMapCreated: (GoogleMapController controller) {
-                _onMapCreated; 
-                setState(() {
-                  _markers.add(
-                      Marker(
-                        markerId: MarkerId('goose1'),
-                        position: LatLng( 43.469117, -80.538172 ),
-                        // position: LatLng(45.521563, -122.677433),
-                        infoWindow: InfoWindow(
-                        title: 'goose'
-                        ),  
-                        icon: myPinIcon
-                      )
-                  );
-                });
-              },
-              initialCameraPosition: CameraPosition(
-                target: _center,
-                zoom: 11.0,
-              ),
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              zoomGesturesEnabled: false // ! get min max zoom
-            ),
+                markers: _markers,
+                zoomControlsEnabled: false,
+                onMapCreated: _onMapCreated,
+                initialCameraPosition: CameraPosition(
+                  target: _center,
+                  zoom: 11.0,
+                ),
+                myLocationEnabled: true,
+                myLocationButtonEnabled: false,
+                zoomGesturesEnabled: true // ! get min max zoom
+                ),
             Positioned(
               bottom: 50,
               child: ElevatedButton(
