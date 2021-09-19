@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'package:htn/views/goose_view.dart';
+import 'package:htn/widgets/rounded_container.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:htn/constants.dart';
 
@@ -22,8 +23,10 @@ class _CameraViewState extends State<CameraView> {
     try {
       if (image == null) return false;
       this.image = image;
-      Navigator.push(context,
-          MaterialPageRoute(builder: (context) => GooseView(image: image)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => GooseView(image: image, numGoose: 3)));
       return true;
     } catch (e) {
       print(e);
@@ -80,13 +83,7 @@ class _CameraViewState extends State<CameraView> {
             : controller!.value.aspectRatio,
         child: CameraPreview(controller!),
       ),
-      bottomSheet: Container(
-        height: MediaQuery.of(context).size.height * 0.2,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                topRight: Radius.circular(20.0)),
-            color: Colors.white),
+      bottomSheet: RoundedContainer(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
