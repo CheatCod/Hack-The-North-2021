@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.htn">
    <application
-        android:label="htn"
+        android:label="FLOCK"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"
@@ -39,9 +39,10 @@
             android:value="2" 
             />
             <meta-data android:name="com.google.android.geo.API_KEY"
-               android:value="AIzaSyDOjgo7wd3ony2stNreZdBcXbP4Kg6WZL"/>
+               android:value="AIzaSyDOjgo7wd3ony2stNreZdBcXbP4Kg6WZLo"/>
     </application>
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 </manifest>

@@ -15,6 +15,8 @@ class MyHome extends StatefulWidget {
 class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
   Location location = Location();
   late GoogleMapController mapController;
+  Set<Marker> _markers = {};
+  bool isLoaded = false;
   // LatLng _center = LatLng(45.521563, -122.677433);
 
   LatLng _center = LatLng(43.468917, -80.538172);
@@ -31,32 +33,7 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
       ),
     ));
 
-    setState(() {
-      _markers.add(Marker(
-          markerId: MarkerId('goose1'),
-          position: LatLng(43.469117, -80.538172),
-          // position: LatLng(45.521563, -122.677433),
-          infoWindow: InfoWindow(title: 'goose'),
-          icon: myPinIcon));
-      _markers.add(Marker(
-          markerId: MarkerId('goose2'),
-          position: LatLng(43.469437, -80.538392),
-          // position: LatLng(45.521563, -122.677433),
-          infoWindow: InfoWindow(title: 'goose'),
-          icon: myPinIcon));
-      _markers.add(Marker(
-          markerId: MarkerId('goose3'),
-          position: LatLng(43.4650437, -80.531392),
-          // position: LatLng(45.521563, -122.677433),
-          infoWindow: InfoWindow(title: 'goose'),
-          icon: myPinIcon));
-      _markers.add(Marker(
-          markerId: MarkerId('goose4'),
-          position: LatLng(43.4656437, -80.531992),
-          // position: LatLng(45.521563, -122.677433),
-          infoWindow: InfoWindow(title: 'goose'),
-          icon: myPinIcon));
-    });
+    init();
   }
 
   requestPermission() async {
@@ -91,9 +68,10 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
   void setCustomMapPin() async {
     myPinIcon = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(devicePixelRatio: 2.5), 'Assets/goose4.png');
+    setState(() {
+      isLoaded = true;
+    });
   }
-
-  Set<Marker> _markers = {};
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +93,7 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
                   zoom: 11.0,
                 ),
                 myLocationEnabled: true,
-                myLocationButtonEnabled: false,
+                myLocationButtonEnabled: true,
                 zoomGesturesEnabled: true // ! get min max zoom
                 ),
             Positioned(
@@ -132,11 +110,9 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
                   primary: Colors.white, // <-- Button color <-- Splash color
                   elevation: 5,
                 ),
-                child: Positioned(
-                  child: Image(
-                    image: AssetImage('Assets/goose.png'),
-                    height: 50,
-                  ),
+                child: Image(
+                  image: AssetImage('Assets/goose.png'),
+                  height: 50,
                 ),
               ),
             ),
@@ -166,6 +142,53 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
         ),
       ),
     );
+  }
+
+  void init() {
+    setState(() {
+      _markers.add(Marker(
+          markerId: MarkerId('goose1'),
+          position: LatLng(43.469117, -80.538172),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose2'),
+          position: LatLng(43.469437, -80.538392),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose3'),
+          position: LatLng(43.4650437, -80.531392),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose4'),
+          position: LatLng(43.4656437, -80.531992),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose5'),
+          position: LatLng(43.468885, -80.540051),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose6'),
+          position: LatLng(43.468983, -80.539968),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose5'),
+          position: LatLng(43.468795, -80.539956),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+    });
   }
 }
 

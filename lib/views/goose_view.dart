@@ -66,6 +66,10 @@ class GooseViewState extends State<GooseView> {
       _recognitions = jsonList.first;
       if (_recognitions!.isEmpty) {
         log("no goose detected");
+        setState(() {
+          isLoaded = true;
+          numGoose = 0;
+        });
         return;
       }
       log("bruh" + receivedJson);
@@ -158,7 +162,7 @@ class GooseViewState extends State<GooseView> {
   }
 
   List<Widget> renderBoxes(double imgHeight, double imgWidth, Size screen) {
-    // if (_recognitions == null) return [];
+    if (_recognitions!.isEmpty) return [];
     // if (_imageWidth == null || _imageHeight == null) return [];
 
     double factorX = screen.width;
