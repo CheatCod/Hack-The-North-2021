@@ -70,20 +70,13 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
                 zoom: 11.0,
               ),
               myLocationEnabled: true,
+              myLocationButtonEnabled: false,
               zoomGesturesEnabled: false, // ! get min max zoom
             ),
             Positioned(
               bottom: 50,
               child: ElevatedButton(
                 onPressed: () {
-                  // pickImage(ImageSource.camera).then((success) {
-                  //   if (!success) return;
-                  //   Navigator.push(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) => GooseView(image: image)));
-                  // });
-
                   Navigator.push(context,
                       MaterialPageRoute(builder: (context) => CameraView()));
                 },
