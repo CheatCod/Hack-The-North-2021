@@ -122,7 +122,7 @@ class GooseViewState extends State<GooseView> {
                     : Text("?",
                         style: TextStyle(
                             fontWeight: FontWeight.bold, fontSize: 70))),
-            (numGoose == 0) ? Text("Geese") : Text("Goose"),
+            (numGoose <= 1) ? Text("Goose") : Text("Geese"),
           ],
         ),
       ),
