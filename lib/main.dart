@@ -12,7 +12,6 @@ import 'views/camera_view.dart';
 Future<void> main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
-    cameras = await availableCameras();
   } on CameraException catch (e) {
     print('Error: $e.code\nError Message: $e.message');
   }

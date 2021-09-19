@@ -60,7 +60,7 @@ class GooseViewState extends State<GooseView> {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      //log("wtf" + await response.stream.bytesToString());
+      //log("bruh" + await response.stream.bytesToString());
       String receivedJson = await response.stream.bytesToString();
       List<dynamic> jsonList = json.decode(receivedJson);
       _recognitions = jsonList.first;
@@ -68,8 +68,8 @@ class GooseViewState extends State<GooseView> {
         log("no goose detected");
         return;
       }
-      log("wtf" + receivedJson);
-      log("wtf" + jsonList.first.first.toString());
+      log("bruh" + receivedJson);
+      log("bruh" + jsonList.first.first.toString());
       setState(() {
         isLoaded = true;
         numGoose = (jsonList.first as List).length;
@@ -158,16 +158,19 @@ class GooseViewState extends State<GooseView> {
     // if (_imageWidth == null || _imageHeight == null) return [];
 
     double factorX = screen.width;
-    double factorY = _imageHeight / _imageHeight * screen.width;
+    double factorY = screen.width / _imageWidth * _imageHeight;
     Color blue = Colors.blue;
-    log("wtfwtf" + _recognitions![0].toString());
+    log("factorX" + factorX.toString());
+    log("factorY" + factorY.toString());
+
+    log("bruhbruh" + _recognitions![0].toString());
     return _recognitions!.map((re) {
       return Container(
         child: Positioned(
-            left: (re![0] as num) * factorX + 10,
-            top: (re![1] as num) * factorY - 15,
-            width: (re![2] as num) * factorX + 10,
-            height: (re![3] as num) * factorY - 15,
+            left: (re![0] as num) * factorX,
+            top: (re![1] as num) * factorY,
+            width: ((re![2] as num) - (re![0] as num)) * factorX,
+            height: ((re![3] as num) - (re![1] as num)) * factorY,
             child: ((1 > 0.50))
                 ? Container(
                     decoration: BoxDecoration(

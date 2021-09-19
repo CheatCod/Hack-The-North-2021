@@ -27,11 +27,15 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
-  flutter:
+  flutter: 
     sdk: flutter
   google_maps_flutter:
   location: ^4.2.0
-  camera: any
+  camera:
+    git:
+      url: https://github.com/Baseflow/flutter-plugins.git
+      ref: issue/89352
+      path: packages/camera/camera
   path_provider: any
   path: any
   image_picker: ^0.8.3+1
