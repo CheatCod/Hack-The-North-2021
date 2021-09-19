@@ -23,11 +23,10 @@ app.get("/", (req, res) => {
 });
 
 const loadModel = async () => {
+  if(model!=null)return;
   console.log("Loading Model")
-  if(model==null){
-    model = await tf.loadGraphModel(`http://localhost:${port}/model/model.json`);
-    console.log("model loaded");
-  }
+  model = await tf.loadGraphModel(`http://localhost:${port}/model/model.json`);
+  console.log("model loaded");
   is_new_od_model = model.inputs.length == 3;
 };
 
@@ -111,6 +110,7 @@ app.post("/get-goose", async (req, res) => {
             status: false,
             message: 'No file uploaded'
         });
+        console.timeStamp("No file uploaded");
     } else {
         //return response
         await loadModel();
@@ -122,10 +122,12 @@ app.post("/get-goose", async (req, res) => {
         let good_locations = locations.slice(0, good_scores.length);
         predictions = [good_locations, good_scores];
         res.send(predictions);
+        console.timeStamp("Responded with results");
     }
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
+    console.timeStamp("Err");
   }
 });
 
