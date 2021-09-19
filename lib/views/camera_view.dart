@@ -8,14 +8,13 @@ import 'package:htn/constants.dart';
 
 import '../main.dart' as main;
 
-List<CameraDescription> cameras = [];
-
 class CameraView extends StatefulWidget {
   @override
   _CameraViewState createState() => _CameraViewState();
 }
 
 class _CameraViewState extends State<CameraView> {
+  List<CameraDescription>? cameras;
   CameraController? controller;
   XFile? image;
 
@@ -52,29 +51,79 @@ class _CameraViewState extends State<CameraView> {
     }
   }
 
+  void _showCameraException(CameraException e) {
+    String errorText = 'Error:${e.code}\nError message : ${e.description}';
+    print(errorText);
+  }
+
+  Future _initCameraController(CameraDescription cameraDescription) async {
+    if (controller != null) {
+      await controller!.dispose();
+    }
+    controller = CameraController(cameraDescription, ResolutionPreset.high);
+
+    controller!.addListener(() {
+      if (mounted) {
+        setState(() {});
+      }
+
+      if (controller!.value.hasError) {
+        print('Camera error ${controller!.value.errorDescription}');
+      }
+    });
+
+    try {
+      await controller!.initialize();
+    } on CameraException catch (e) {
+      _showCameraException(e);
+    }
+    if (mounted) {
+      setState(() {});
+    }
+  }
+
   @override
   void initState() {
     super.initState();
 
-    controller = CameraController(cameras[0], ResolutionPreset.max);
-    controller!.initialize().then((_) {
-      if (!mounted) {
-        return;
+    availableCameras().then((availableCameras) {
+      cameras = availableCameras;
+
+      if (cameras!.length > 0) {
+        _initCameraController(cameras![0]).then((void v) {});
+      } else {
+        print('No camera available');
       }
-      setState(() {});
+    }).catchError((err) {
+      print('Error: $err.code\nError Message: $err.message');
     });
+
+    // controller = CameraController(cameras[0], ResolutionPreset.max);
+    // controller!.initialize().then((_) {
+    //   if (!mounted) {
+    //     return;
+    //   }
+    //   setState(() {});
+    // });
   }
 
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   controller?.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    if (!controller!.value.isInitialized) {
-      return Container();
+    if (controller == null || !controller!.value.isInitialized) {
+      return const Text(
+        'Loading',
+        style: TextStyle(
+          color: Colors.white,
+          fontSize: 20.0,
+          fontWeight: FontWeight.w900,
+        ),
+      );
     }
     return Scaffold(
       body: AspectRatio(
