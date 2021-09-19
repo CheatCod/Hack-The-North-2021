@@ -117,7 +117,7 @@ app.post("/get-goose", async (req, res) => {
         let predictions = await runPrediction(image);
         let good_scores = predictions[1].filter(score => score > model_certainty);
         let locations = predictions[0];
-        let good_locations = locations.slice(locations.length - good_scores.length);
+        let good_locations = locations.slice(0, good_scores.length);
         predictions = [good_locations, good_scores];
         res.send(predictions);
     }
