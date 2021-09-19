@@ -105,7 +105,7 @@ const runPrediction = async (inputs) => {
 app.post("/get-goose", async (req, res) => {
   try  {
     if(!req.files) {
-        res.send({
+        res.status(502).send({
             status: false,
             message: 'No file uploaded'
         });
@@ -118,7 +118,8 @@ app.post("/get-goose", async (req, res) => {
         let good_scores = predictions[1].filter(score => score > model_certainty);
         let locations = predictions[0];
         let good_locations = locations.slice(0, good_scores.length);
-        res.send(good_locations);
+        predictions = [good_locations, good_scores];
+        res.send(predictions);
     }
   } catch (err) {
     console.log(err);
