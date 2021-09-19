@@ -24,9 +24,11 @@ app.get("/", (req, res) => {
 
 const loadModel = async () => {
   console.log("Loading Model")
-  model = await tf.loadGraphModel(`http://localhost:${port}/model/model.json`);
+  if(model==null){
+    model = await tf.loadGraphModel(`http://localhost:${port}/model/model.json`);
+    console.log("model loaded");
+  }
   is_new_od_model = model.inputs.length == 3;
-  console.log("model loaded");
 };
 
 const loadImage = async (picture) => {
@@ -55,7 +57,7 @@ function _logistic(x) {
 const runPrediction = async (inputs) => {
   const ANCHORS = [0.573, 0.677, 1.87, 2.06, 3.34, 5.47, 7.88, 3.53, 9.77, 9.17];
   const NEW_OD_OUTPUT_TENSORS = ['detected_boxes', 'detected_scores', 'detected_classes'];
-  const outputs = await model.executeAsync(inputs, is_new_od_model ? NEW_OD_OUTPUT_TENSORS : null);
+  const outputs = model.execute(inputs, is_new_od_model ? NEW_OD_OUTPUT_TENSORS : null);
   const arrays = !Array.isArray(outputs) ? outputs.array() : Promise.all(outputs.map(t => t.array()));
 	let predictions = await arrays;
 
