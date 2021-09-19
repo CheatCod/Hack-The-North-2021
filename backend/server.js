@@ -102,7 +102,7 @@ const runPrediction = async (inputs) => {
   return predictions;
 }
 
-app.post("/submit-image", async (req, res) => {
+app.post("/get-goose", async (req, res) => {
   try  {
     if(!req.files) {
         res.send({
