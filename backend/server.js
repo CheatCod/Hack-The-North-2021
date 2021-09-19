@@ -116,21 +116,18 @@ app.post("/submit-image", async (req, res) => {
     } else {
         //return response
         console.log(req.files.image);
-        res.send({
-            status: true,
-            message: 'Files are uploaded',
-            filename: req.files.image.name
-        });
+        await loadModel();
+        const image = await loadImage(req.files.image.data);
+        const predictions = await runPrediction(image);
+        console.log(predictions);
+        res.send(predictions);
     }
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
   }
 
-  await loadModel();
-  const image = await loadImage(req.files.image.data);
-  const predictions = await runPrediction(image);
-  console.log(predictions);
+
 });
 
 
