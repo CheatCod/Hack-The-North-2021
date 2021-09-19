@@ -171,11 +171,9 @@ class _CameraViewState extends State<CameraView> {
                           Colors.white, // <-- Button color <-- Splash color
                       elevation: 5,
                     ),
-                    child: Positioned(
-                      child: Image(
-                        image: AssetImage('Assets/goose.png'),
-                        height: 50,
-                      ),
+                    child: Image(
+                      image: AssetImage('Assets/goose.png'),
+                      height: 50,
                     ),
                   ),
                 ),
