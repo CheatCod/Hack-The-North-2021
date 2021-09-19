@@ -60,7 +60,7 @@ class GooseViewState extends State<GooseView> {
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
-      //log("wtf" + await response.stream.bytesToString());
+      //log("bruh" + await response.stream.bytesToString());
       String receivedJson = await response.stream.bytesToString();
       List<dynamic> jsonList = json.decode(receivedJson);
       _recognitions = jsonList.first;
@@ -68,8 +68,8 @@ class GooseViewState extends State<GooseView> {
         log("no goose detected");
         return;
       }
-      log("wtf" + receivedJson);
-      log("wtf" + jsonList.first.first.toString());
+      log("bruh" + receivedJson);
+      log("bruh" + jsonList.first.first.toString());
       setState(() {
         isLoaded = true;
         numGoose = (jsonList.first as List).length;
@@ -163,7 +163,7 @@ class GooseViewState extends State<GooseView> {
     log("factorX" + factorX.toString());
     log("factorY" + factorY.toString());
 
-    log("wtfwtf" + _recognitions![0].toString());
+    log("bruhbruh" + _recognitions![0].toString());
     return _recognitions!.map((re) {
       return Container(
         child: Positioned(
