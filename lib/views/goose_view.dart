@@ -28,14 +28,24 @@ class GooseViewState extends State<GooseView> {
   late Image imageComponent;
   int numGoose = 0;
   List<dynamic>? _recognitions;
-  late double _imageWidth, _imageHeight;
   bool isLoaded = false;
-
+  late double _imageWidth;
+  late double _imageHeight;
   @override
   void initState() {
     super.initState();
 
+    FileImage(File(widget.image!.path))
+        .resolve(ImageConfiguration())
+        .addListener((ImageStreamListener((ImageInfo info, bool _) {
+          setState(() {
+            _imageWidth = info.image.width.toDouble();
+            _imageHeight = info.image.height.toDouble();
+          });
+        })));
+
     imageComponent = Image.file(File(widget.image!.path));
+
     WidgetsBinding.instance!.addPostFrameCallback((_) {
       upload(widget.image!.path);
     });
@@ -54,10 +64,15 @@ class GooseViewState extends State<GooseView> {
       String receivedJson = await response.stream.bytesToString();
       List<dynamic> jsonList = json.decode(receivedJson);
       _recognitions = jsonList.first;
+      if (_recognitions!.isEmpty) {
+        log("no goose detected");
+        return;
+      }
       log("wtf" + receivedJson);
       log("wtf" + jsonList.first.first.toString());
       setState(() {
         isLoaded = true;
+        numGoose = (jsonList.first as List).length;
       });
     } else {
       log(response.reasonPhrase.toString());
@@ -72,44 +87,40 @@ class GooseViewState extends State<GooseView> {
         child: imageComponent,
       ),
     );
-    stackChildren.add(
-      Positioned(
-        bottom: 0,
-        child: RoundedContainer(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              (numGoose <= 1) ? Text("There is") : Text("There are"),
-              Padding(
-                padding: EdgeInsets.all(15),
-                child: NumberPicker(
-                  value: numGoose,
-                  minValue: 0,
-                  maxValue: 5,
-                  onChanged: (value) => setState(() => numGoose = value),
-                  itemCount: 1,
-                  itemHeight: 80,
-                  selectedTextStyle:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 70),
-                  textStyle:
-                      TextStyle(fontWeight: FontWeight.bold, fontSize: 70),
-                  haptics: true,
-                ),
-              ),
-              (numGoose == 0) ? Text("Geese") : Text("Goose"),
-            ],
-          ),
-        ),
-      ),
-    );
-
-    Size size = MediaQuery.of(context).size;
+    Size screen = MediaQuery.of(context).size;
     if (isLoaded) {
-      stackChildren.addAll(renderBoxes(size));
+      List<Widget> test = renderBoxes(
+          imageComponent.height ?? 0.0, imageComponent.width ?? 0.0, screen);
+      stackChildren.addAll(test);
     }
+
     return Scaffold(
       body: Stack(
         children: stackChildren,
+      ),
+      bottomSheet: RoundedContainer(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            (numGoose <= 1) ? Text("There is") : Text("There are"),
+            Padding(
+              padding: EdgeInsets.all(15),
+              child: NumberPicker(
+                value: numGoose,
+                minValue: 0,
+                maxValue: 15,
+                onChanged: (value) => setState(() => numGoose = value),
+                itemCount: 1,
+                itemHeight: 80,
+                selectedTextStyle:
+                    TextStyle(fontWeight: FontWeight.bold, fontSize: 70),
+                textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 70),
+                haptics: true,
+              ),
+            ),
+            (numGoose == 0) ? Text("Geese") : Text("Goose"),
+          ],
+        ),
       ),
     );
 
@@ -142,20 +153,21 @@ class GooseViewState extends State<GooseView> {
     );
   }
 
-  List<Widget> renderBoxes(Size screen) {
+  List<Widget> renderBoxes(double imgHeight, double imgWidth, Size screen) {
     // if (_recognitions == null) return [];
     // if (_imageWidth == null || _imageHeight == null) return [];
 
-    // double factorX = screen.width;
-    // double factorY = _imageHeight / _imageHeight * screen.width;
+    double factorX = screen.width;
+    double factorY = _imageHeight / _imageHeight * screen.width;
     Color blue = Colors.blue;
+    log("wtfwtf" + _recognitions![0].toString());
     return _recognitions!.map((re) {
       return Container(
         child: Positioned(
-            left: _recognitions!.indexOf(0) * screen.width,
-            top: _recognitions!.indexOf(1) * screen.height,
-            width: _recognitions!.indexOf(2) * screen.width,
-            height: _recognitions!.indexOf(3) * screen.width,
+            left: (re![0] as num) * factorX + 10,
+            top: (re![1] as num) * factorY - 15,
+            width: (re![2] as num) * factorX + 10,
+            height: (re![3] as num) * factorY - 15,
             child: ((1 > 0.50))
                 ? Container(
                     decoration: BoxDecoration(
