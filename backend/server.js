@@ -16,6 +16,7 @@ app.use(fileUpload({
 app.use(cors());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+app.use(express.static('static'))
 
 app.get("/", (req, res) => {
   res.send("Hello World!");
@@ -23,7 +24,7 @@ app.get("/", (req, res) => {
 
 const loadModel = async () => {
   console.log("Loading Model")
-  model = await tf.loadGraphModel('http://127.0.0.1:8080/static/model/model.json');
+  model = await tf.loadGraphModel(`http://localhost:${port}/model/model.json`);
   is_new_od_model = model.inputs.length == 3;
   console.log("model loaded");
 };
@@ -33,13 +34,24 @@ const loadImage = async (picture) => {
   const input_size = model.inputs[0].shape[1];
   console.log(input_size);
 
-  let image = tf.browser.fromPixels(picture, 3);
-  // image = tf.image.resizeBilinear(image.expandDims().toFloat(), [input_size, input_size]);
-  // if (is_new_od_model) {
-  //   console.log("ODM V2 Detected");
-  //   image = is_new_od_model ? image : image.reverse(-1);
-  // }
-  // return image;
+  let image = tf.node.decodeImage(picture, 3);
+
+  // let image = tf.browser.fromPixels(picture, 3);
+  image = tf.image.resizeBilinear(image.expandDims().toFloat(), [input_size, input_size]);
+  if (is_new_od_model) {
+    console.log("ODM V2 Detected");
+    image = is_new_od_model ? image : image.reverse(-1);
+  }
+  return image;
+}
+
+function _logistic(x) {
+  if (x > 0) {
+      return (1 / (1 + Math.exp(-x)));
+  } else {
+      const e = Math.exp(x);
+      return e / (1 + e);
+  }
 }
 
 const runPrediction = async (inputs) => {
@@ -116,8 +128,9 @@ app.post("/submit-image", async (req, res) => {
   }
 
   await loadModel();
-  await loadImage(req.files.image.data);
-
+  const image = await loadImage(req.files.image.data);
+  const predictions = await runPrediction(image);
+  console.log(predictions);
 });
 
 
