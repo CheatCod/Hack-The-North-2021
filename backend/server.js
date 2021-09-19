@@ -32,14 +32,12 @@ const loadModel = async () => {
 const loadImage = async (picture) => {
   
   const input_size = model.inputs[0].shape[1];
-  console.log(input_size);
 
   let image = tf.node.decodeImage(picture, 3);
 
   // let image = tf.browser.fromPixels(picture, 3);
   image = tf.image.resizeBilinear(image.expandDims().toFloat(), [input_size, input_size]);
   if (is_new_od_model) {
-    console.log("ODM V2 Detected");
     image = is_new_od_model ? image : image.reverse(-1);
   }
   return image;
@@ -92,16 +90,14 @@ const runPrediction = async (inputs) => {
 					let max_index = class_probabilities.argMax();
 					boxes.push([x - w / 2, y - h / 2, x + w / 2, y + h / 2]);
 					scores.push(class_probabilities.max().dataSync()[0]);
-					classes.push(max_index.dataSync()[0]);
 				}
 			}
 		}
     boxes = tf.tensor2d(boxes);
 		scores = tf.tensor1d(scores);
-		classes = tf.tensor1d(classes);
 
-		const selected_indices = await tf.image.nonMaxSuppressionAsync(boxes, scores, 10);
-		predictions = [await boxes.gather(selected_indices).array(), await scores.gather(selected_indices).array(), await classes.gather(selected_indices).array()];
+		const selected_indices = await tf.image.nonMaxSuppressionAsync(boxes, scores, 20);
+		predictions = [await boxes.gather(selected_indices).array(), await scores.gather(selected_indices).array()];
   }
   return predictions;
 }
@@ -115,19 +111,20 @@ app.post("/submit-image", async (req, res) => {
         });
     } else {
         //return response
-        console.log(req.files.image);
         await loadModel();
         const image = await loadImage(req.files.image.data);
-        const predictions = await runPrediction(image);
-        console.log(predictions);
+        const model_certainty = 0.34
+        let predictions = await runPrediction(image);
+        let good_scores = predictions[1].filter(score => score > model_certainty);
+        let locations = predictions[0];
+        let good_locations = locations.slice(locations.length - good_scores.length);
+        predictions = [good_locations, good_scores];
         res.send(predictions);
     }
   } catch (err) {
     console.log(err);
     res.status(500).send(err);
   }
-
-
 });
 
 
