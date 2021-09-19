@@ -38,6 +38,24 @@ class _MyHomeState extends State<MyHome> with WidgetsBindingObserver {
           // position: LatLng(45.521563, -122.677433),
           infoWindow: InfoWindow(title: 'goose'),
           icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose2'),
+          position: LatLng(43.469437, -80.538392),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose3'),
+          position: LatLng(43.4650437, -80.531392),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
+      _markers.add(Marker(
+          markerId: MarkerId('goose4'),
+          position: LatLng(43.4656437, -80.531992),
+          // position: LatLng(45.521563, -122.677433),
+          infoWindow: InfoWindow(title: 'goose'),
+          icon: myPinIcon));
     });
   }
 
